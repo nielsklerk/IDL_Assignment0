@@ -23,8 +23,34 @@
 
 \section{Task 1}
 \subsection{Task 1.1: Means and distances of digits}
-The first step is to calculate the means for each respective digit vector. To this end, for each digit, we make use of a mask based on the training output to then average over the respective inputs. By using these averages of the input vectors we calculate the distance between the means of each digit vector.
+The first step is to calculate the means for each respective digit vector. To this end, for each digit, we make use of a mask based on the training output to then average over the respective inputs. By using these averages of the input vectors, we calculate the distance between the means of each digit vector.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\linewidth]{dist_matrix.pdf}
+    \caption{Distance matrix between digit vector means}
+    \label{fig:dist_mat}
+\end{figure}
 \section{Task 2: Multi-class Perceptron}
 
 \section{Task 3: XOR Network and Gradient Descent}
+
+\begin{align*}
+    \hat{y} &= \sigma[f_1] \\
+    f_1 &= \beta_1 + \omega_1h_1 + \omega_2h_2 = \beta_1 + \boldsymbol{\omega}^T\mathbf{h} \\
+    \mathbf{h} &= \sigma[\mathbf{f}_0] \\
+    \mathbf{f}_0 &= \boldsymbol{\beta}_0 + \boldsymbol{\Omega}\mathbf{x} \\ 
+    \\
+    l &= \tfrac{1}{2}(\hat{y} - y)^2 = \tfrac{1}{2}(\sigma[f_1]-y)^2 \\
+    \tfrac{\partial l}{\partial f_1} &= (\sigma[f_1] - y)(1 - \sigma[f_1])\sigma[f_1] \\
+    \tfrac{\partial f_1}{\partial \mathbf{h}} &= \boldsymbol{\omega} \\
+    \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} &= \tfrac{\partial}{\partial \mathbf{f}_0} (\sigma[\mathbf{f}_0]) = \mathrm{diag}[\sigma[\mathbf{f}_0]\odot(1-\sigma[\mathbf{f}_0])] \\
+    \\
+    \tfrac{\partial l}{\partial \beta_1} &= \tfrac{\partial f_1}{\partial \beta_1} \tfrac{\partial l}{\partial f_1} = \tfrac{\partial l}{\partial f_1} \\
+    \tfrac{\partial l}{\partial \boldsymbol{\omega}} &= \tfrac{\partial f_1}{\partial \boldsymbol{\omega}} \tfrac{\partial l}{\partial f_1} =  \tfrac{\partial l}{\partial f_1}\mathbf{h} \\
+    \tfrac{\partial l}{\partial \boldsymbol{\beta}_0} &= \tfrac{\partial \mathbf{f}_0}{\partial \boldsymbol{\beta}_0} \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1}  = \mathbf{I} \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1}  \\
+    \tfrac{\partial l}{\partial \boldsymbol{\Omega}} &=  \tfrac{\partial \mathbf{f}_0}{\partial \boldsymbol{\Omega}} \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1}  = \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1} \mathbf{x}^T
+\end{align*}
+
+
 \end{document}
