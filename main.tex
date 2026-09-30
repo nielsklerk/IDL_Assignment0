@@ -144,6 +144,15 @@ After using the "lazy approach" to finding a decent combination of parameter ini
 
 We trained the model 100 times with ten thousand epochs, and we found that in 41\% of the networks, there were no classification errors. In 25\% there was a single error, and in the remaining 34\% of networks, there were two errors.
 
+In figure \ref{fig:MSE_XOR} the MSE is plotted against the number of epochs during the training of three different neural networks. Two of the three networks make at least one classification error, hence their MSE is higher and only a local minimum is found during the gradient descent process. For the network with no errors, the MSE is visible a lot lower, almost zero, and a global minimum is found.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{TrainingExamplesXOR.svg}
+    \caption{The MSE of three different XOR neural networks, one with 0, 1 and 2 classification errors.}
+    \label{fig:MSE_XOR}
+\end{figure}
+
 \section{Contribution}
 Phoebe: Task 1 code, Task 1 report\\
 Vincent: Task 1 code, Task 3 code, Task 3 report\\
