@@ -64,6 +64,8 @@ By looking at the four confusion matrices from Figure \ref{fig:NN} and Figure \r
 
 \section{Task 2: Multi-class Perceptron}
 Going to write this up after food break - Phoebe
+
+Several values for the learning rate were experimented with. However, values $\gtrsim10^{-5}$ resulted in an overflow error. So the value of $\eta=10^{-6}$ is just for the learning rate.  
 \section{Task 3: XOR Network and Gradient Descent}
 
 \begin{align*}
@@ -83,5 +85,9 @@ Going to write this up after food break - Phoebe
     \tfrac{\partial l}{\partial \boldsymbol{\Omega}} &=  \tfrac{\partial \mathbf{f}_0}{\partial \boldsymbol{\Omega}} \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1}  = \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1} \mathbf{x}^T
 \end{align*}
 
+\section{Contribution}
+Phoebe:
+Vincent: 
+Niels: 
 
 \end{document}
