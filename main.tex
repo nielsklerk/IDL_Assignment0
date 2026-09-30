@@ -23,13 +23,19 @@
 
 \section{Task 1}
 \subsection{Task 1.1: Means and distances of digits}
-The first step is to calculate the means for each respective digit vector. To this end, for each digit, we make use of a mask based on the training output to then average over the respective inputs. By using these averages of the input vectors, we calculate the distance between the means of each digit vector.
-
+The first step is to calculate the means for each respective digit vector. To this end, for each digit, we make use of a mask based on the training output to then average over the respective inputs. By using these averages of the input vectors, we calculate the distance between the means of each digit vector (Figure \ref{fig:dist_mat}). Based on these distances we can assume that our classifier will do pretty well at distinguishing most digits from each other since most distances are considerable. The classifier will do best at distinguishing between 0 and 1 as they have the largest difference and will do the worst at distinguishing between 7 and 9.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.4\linewidth]{dist_matrix.pdf}
     \caption{Distance matrix between digit vector means}
     \label{fig:dist_mat}
+\end{figure}
+\subsection{Task 1.2: Dimensionality reduction}
+\begin{figure}
+    \centering
+    
+    \caption{Caption}
+    \label{fig:placeholder}
 \end{figure}
 \section{Task 2: Multi-class Perceptron}
 
