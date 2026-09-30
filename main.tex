@@ -6,6 +6,7 @@
 \usepackage{url}
 \usepackage{subfigure}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{mathrsfs}
 \usepackage{float}
 \usepackage{caption}
@@ -62,32 +63,90 @@ For this task we make use of the scikit-learn package with its KNN classifier cl
 \end{figure}\\
 By looking at the four confusion matrices from Figure \ref{fig:NN} and Figure \ref{fig:KNN} we notice first that KNN is better at classifying than the naive NN method. A second trend we can observe is that while KNN struggles most at distinguishing 3 from 5, the NN method doesn't and instead struggles a lot more with 0 and 6. Neither of these struggles are what we expected from our previous look into the data in \ref{sec:dimred}. Looking at our UMAP (Figure \ref{fig:dimred}) results, these struggles make sense as some digits may fall in between the two digits in terms of distance, which then leads them to being classified wrongly.
 
+Training set accuracy: 97.9\% Test set accuracy: 91.4\%
+
 \section{Task 2: Multi-class Perceptron}
-Going to write this up after food break - Phoebe
+% Going to write this up after food break - Phoebe
+Here, we want to use a simple linear model to classify the images. The images are, in essence, a collection of values
+\begin{equation}
+    \boldsymbol{I} = (x_1, x_2, ..., x_{256}).
+\end{equation}
+However, this does not include the bias of the nodes, which can be encompassed by adding a 1 to the image values. This is done to simplify the calculations to a single matrix multiplication.
+\begin{equation}
+    \boldsymbol{I} = (1, x_1, x_2, ..., x_{256})
+\end{equation}
+Now the model can be written as
+\begin{equation}
+    \hat{y} = \sum\phi_ix_i = \boldsymbol{\phi}^T\boldsymbol{x}.
+\end{equation}
+To train the classifier, we want to reduce the difference between the true labels and the model predictions, i.e., minimize the least squares loss function. The weight values are updated according to gradient descent
+  
+\begin{equation}
+    \boldsymbol{\phi}\leftarrow\boldsymbol{\phi}-\alpha\frac{\partial L}{\partial \boldsymbol{\phi}},
+\end{equation}
+where the gradient of the least squares loss function is
+\begin{equation}
+    \frac{\partial L}{\partial \boldsymbol{\phi}} = \sum\frac{\partial l_i}{\partial \boldsymbol{\phi}}
+\end{equation}
+with $l_i$ the squared error $(\hat{y}_i-y_i)^2$ for image $i$. The gradient of the squared error is 
+\begin{equation}
+    \frac{\partial l_i}{\partial \boldsymbol{\phi}} = 2(\hat{y}_i-y_i)\frac{\partial}{\partial\boldsymbol{\phi}}\boldsymbol{\phi}^T\boldsymbol{x}_i=2(\hat{y}_i-y_i)\boldsymbol{x}_i
+\end{equation}
+The gradients of the individual images are summed to update the values of the weights.
 
-Several values for the learning rate were experimented with. However, values $\gtrsim10^{-5}$ resulted in an overflow error. So the value of $\eta=10^{-6}$ is just for the learning rate.  
+10 nodes corresponding to the 10 digits are trained in parallel to classify the image. The output of this model is not a number but 10 numbers, where the position with the highest value is chosen as the model's prediction. To train this model, the labels from the dataset are converted into a position-based label, e.g., $5\rightarrow(0,0,0,0,0,1,0,0,0,0)$. 
+
+When initializing the weights, the values are drawn from $\mathcal{U}(0, 1)$. Subsequently, the values are divided by the total number of entries in the weight matrix to reduce the total values and stabilize the training.
+We experimented with several learning rates. However, values $\gtrsim 10^{-5}$ resulted in an overflow error. So the learning rate is set to $\alpha=10^{-6}$. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{imgs/MSE.pdf}
+    \caption{MSE of the classifier during training}
+    \label{fig:dist_mat}
+\end{figure}
+The MSE of the model quickly drops off at the start of the training and then starts to level off. After training the model for 1000 steps, the training set accuracy is 92.6\% and the test set accuracy is 86.5\%. Comparing these results to the accuracies of the distance-based models discussed before shows that the multiclass perceptron performs better than the naive distance-based approach. However, KNN outperforms the multiclass perceptron by $\sim5\%$ on both the training and test sets. 
+
+
 \section{Task 3: XOR Network and Gradient Descent}
-
+The structure we used in our neural network to solve the XOR problem is as followed. The pre-activation values $\mathbf{f}_0$ for the hidden layer are calculated from the input $\mathbf{x}$ by using the parameters $\boldsymbol{\Omega}$ and the bias $\boldsymbol{\beta}_0$. The hidden layer values $h_1,h_2$ are sequentially calculated using the sigmoid function. 
 \begin{align*}
-    \hat{y} &= \sigma[f_1] \\
+    \mathbf{f}_0 &= \boldsymbol{\beta}_0 + \boldsymbol{\Omega}\mathbf{x} \\    
+    \mathbf{h} &= \sigma[\mathbf{f}_0]
+\end{align*}
+The output $\hat{y}$ is calculated similarly using the three parameters $\omega_1, \omega_2, \beta_1$. 
+\begin{align*}
     f_1 &= \beta_1 + \omega_1h_1 + \omega_2h_2 = \beta_1 + \boldsymbol{\omega}^T\mathbf{h} \\
-    \mathbf{h} &= \sigma[\mathbf{f}_0] \\
-    \mathbf{f}_0 &= \boldsymbol{\beta}_0 + \boldsymbol{\Omega}\mathbf{x} \\ 
-    \\
-    l &= \tfrac{1}{2}(\hat{y} - y)^2 = \tfrac{1}{2}(\sigma[f_1]-y)^2 \\
+    \hat{y} &= \sigma[f_1]
+\end{align*}
+To train the network, we'll need to define a loss function $l$. The factor $\tfrac{1}{2}$ is to get rid of any constant factors in the backpropagation process.
+\begin{align*}
+    l &= \tfrac{1}{2}(\hat{y} - y)^2 = \tfrac{1}{2}(\sigma[f_1]-y)^2 
+\end{align*}
+We'll need the loss function's partial derivatives with respect to all (pre-)activation values to use backpropagation for the process of training the network using a gradient descent  algorithm.
+\begin{align*}
     \tfrac{\partial l}{\partial f_1} &= (\sigma[f_1] - y)(1 - \sigma[f_1])\sigma[f_1] \\
     \tfrac{\partial f_1}{\partial \mathbf{h}} &= \boldsymbol{\omega} \\
-    \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} &= \tfrac{\partial}{\partial \mathbf{f}_0} (\sigma[\mathbf{f}_0]) = \mathrm{diag}[\sigma[\mathbf{f}_0]\odot(1-\sigma[\mathbf{f}_0])] \\
-    \\
+    \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} &= \tfrac{\partial}{\partial \mathbf{f}_0} (\sigma[\mathbf{f}_0]) = \mathrm{diag}[\sigma[\mathbf{f}_0]\odot(1-\sigma[\mathbf{f}_0])] 
+\end{align*}
+While using the gradient descent algorithm, we're of course only interested in the gradients of the loss function with respect to the parameters, hence we need some more derivatives. We end up with a complete expression for every parameter.
+\begin{align*}
     \tfrac{\partial l}{\partial \beta_1} &= \tfrac{\partial f_1}{\partial \beta_1} \tfrac{\partial l}{\partial f_1} = \tfrac{\partial l}{\partial f_1} \\
     \tfrac{\partial l}{\partial \boldsymbol{\omega}} &= \tfrac{\partial f_1}{\partial \boldsymbol{\omega}} \tfrac{\partial l}{\partial f_1} =  \tfrac{\partial l}{\partial f_1}\mathbf{h} \\
     \tfrac{\partial l}{\partial \boldsymbol{\beta}_0} &= \tfrac{\partial \mathbf{f}_0}{\partial \boldsymbol{\beta}_0} \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1}  = \mathbf{I} \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1}  \\
     \tfrac{\partial l}{\partial \boldsymbol{\Omega}} &=  \tfrac{\partial \mathbf{f}_0}{\partial \boldsymbol{\Omega}} \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1}  = \tfrac{\partial \mathbf{h}}{\partial \mathbf{f}_0} \tfrac{\partial f_1}{\partial \mathbf{h}} \tfrac{\partial l}{\partial f_1} \mathbf{x}^T
 \end{align*}
+While training the network, we recorded the mean squared error (MSE) to track its progress.
+\begin{align*}
+    \text{MSE} = \tfrac{1}{4}\Sigma_i^{4}(\hat{y}[\mathbf{x}_i] - y_i)^2
+\end{align*}
+After using the "lazy approach" to finding a decent combination of parameter initializations and learning rates, we initialized all parameters and biases using random values picked from a normal distribution centered around $0$ with a standard deviation of $0.5$. For our learning rate we used a value of $0.75$. 
+
+We trained the model 100 times with ten thousand epochs, and we found that in 41\% of the networks, there were no classification errors. In 25\% there was a single error, and in the remaining 34\% of networks, there were two errors.
 
 \section{Contribution}
-Phoebe:
-Vincent: 
-Niels: 
+Phoebe: Task 1 code, Task 1 report\\
+Vincent: Task 1 code, Task 3 code, Task 3 report\\
+Niels: Task 1 code, Task 2 code, Task 2 report \\
 
 \end{document}
