@@ -31,6 +31,7 @@ The first step is to calculate the means for each respective digit vector. To th
     \caption{Distance matrix between digit vector means}
     \label{fig:dist_mat}
 \end{figure}
+\label{sec:dimred}
 \subsection{Task 1.2: Dimensionality reduction}
 While PCA doesn't give us a very clear picture of the distances between the digits, t-SNE and UMAP show us the same trends. Even though the placement of the points might be different between the plots their neighbours remain similar. For both plots we can see that 0 and 1 are at opposite ends while 9 and 7 are either very close or merging, which agrees with our conclusions from before.
 \begin{figure}[h]
@@ -51,10 +52,18 @@ By taking all our image vectors and calculating their distances to our previousl
     \label{fig:NN}
 \end{figure}
 \subsection{Task 1.4: K Nearest Neighbour}
-M
+For this task we make use of the scikit-learn package with its KNN classifier class. We use n\_neighbours = 3 for our parameters and then fit the classifier to our training data. \\
+\begin{figure}[h]
+    \centering
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{imgs/KNN_train.pdf}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{imgs/KNN_test.pdf}}
+    \caption{Nearest Neighbour classifier confusion matrix (a) training set (b) test set}
+    \label{fig:KNN}
+\end{figure}\\
+By looking at the four confusion matrices from Figure \ref{fig:NN} and Figure \ref{fig:KNN} we notice first that KNN is better at classifying than the naive NN method. A second trend we can observe is that while KNN struggles most at distinguishing 3 from 5, the NN method doesn't and instead struggles a lot more with 0 and 6. Neither of these struggles are what we expected from our previous look into the data in \ref{sec:dimred}. Looking at our UMAP (Figure \ref{fig:dimred}) results, these struggles make sense as some digits may fall in between the two digits in terms of distance, which then leads them to being classified wrongly.
 
 \section{Task 2: Multi-class Perceptron}
-
+Going to write this up after food break - Phoebe
 \section{Task 3: XOR Network and Gradient Descent}
 
 \begin{align*}
