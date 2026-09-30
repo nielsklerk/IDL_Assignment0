@@ -4,7 +4,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{url}
-\usepackage{subcaption}
+\usepackage{subfigure}
 \usepackage{amsmath}
 \usepackage{mathrsfs}
 \usepackage{float}
@@ -26,17 +26,25 @@
 The first step is to calculate the means for each respective digit vector. To this end, for each digit, we make use of a mask based on the training output to then average over the respective inputs. By using these averages of the input vectors, we calculate the distance between the means of each digit vector (Figure \ref{fig:dist_mat}). Based on these distances we can assume that our classifier will do pretty well at distinguishing most digits from each other since most distances are considerable. The classifier will do best at distinguishing between 0 and 1 as they have the largest difference and will do the worst at distinguishing between 7 and 9.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.4\linewidth]{dist_matrix.pdf}
+    \includegraphics[width=0.4\linewidth]{imgs/dist_matrix.pdf}
     \caption{Distance matrix between digit vector means}
     \label{fig:dist_mat}
 \end{figure}
 \subsection{Task 1.2: Dimensionality reduction}
-\begin{figure}
+While PCA doesn't give us a very clear picture of the distances between the digits, t-SNE and UMAP show us the same trends. Even though the placement of the points might be different between the plots their neighbours remain similar. For both plots we can see that 0 and 1 are at opposite ends while 9 and 7 are either very close or merging, which agrees with our conclusions from before.
+\begin{figure}[h]
     \centering
-    
-    \caption{Caption}
-    \label{fig:placeholder}
+    \subfigure[]{\includegraphics[width=0.3\textwidth]{imgs/PCA.pdf}}
+    \subfigure[]{\includegraphics[width=0.3\textwidth]{imgs/tSNE.pdf}}
+    \subfigure[]{\includegraphics[width=0.3\textwidth]{imgs/umap.pdf}}
+    \caption{Dimensionality reduction algorithms: (a) PCA (b) t-SNE (c) UMAP}
+    \label{fig:dimred}
 \end{figure}
+\subsection{Task 1.3: Nearest Neighbour}
+By taking all our image vectors and calculating their distances to our previously obtained digit mean vectors, we classify each image with the digit it's closest to. This gives us an accuracy of 86.35\% on the training set and 80.4\% on the test set. 
+\subsection{Task 1.4: K Nearest Neighbour}
+Making confusion matrixes
+
 \section{Task 2: Multi-class Perceptron}
 
 \section{Task 3: XOR Network and Gradient Descent}
